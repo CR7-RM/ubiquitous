@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>林宇哲 | 個人網站</title>
+    <style>
+        /* 基礎設定與字體 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #393c41;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            height: 100vh;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        /* 固定式極簡導覽列 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 30px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            /* 美化導覽列底部邊界 */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        nav a {
+            text-decoration: none;
+            color: #171a20;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 0 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        nav a:hover { 
+            color: #1abc9c;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        /* 全螢幕區塊共用設定 */
+        section {
+            min-height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 80px 20px 40px;
+        }
+
+        /* 區塊內容 (標題) */
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+        }
+        h1 {
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: #171a20;
+        }
+        .subtitle {
+            font-size: 15px;
+            font-weight: 500;
+            color: #5c5e62;
+        }
+
+        /* ====== 照片拼貼牆 (CSS Grid) ====== */
+        .photo-collage {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-rows: 180px 180px;
+            gap: 18px;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            z-index: 10;
+        }
+        .photo-item {
+            /* 美化照片邊界：增加圓角、加上微透明邊框、加深陰影層次 */
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .photo-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+            z-index: 2;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 指定照片位置 */
+        .pic-personal { grid-column: 1 / 2; grid-row: 1 / 3; }
+        .pic-football { grid-column: 2 / 3; grid-row: 1 / 2; }
+        .pic-swim     { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .pic-friends  { grid-column: 2 / 3; grid-row: 2 / 3; }
+        .pic-brother  { grid-column: 3 / 4; grid-row: 2 / 3; }
+
+        /* 區塊內容 (敘述文字置中) */
+        .section-body {
+            max-width: 800px;
+            text-align: center;
+            z-index: 10;
+            line-height: 1.6;
+        }
+        .section-body p {
+            font-size: 15px;
+            color: #5c5e62;
+            margin-bottom: 20px;
+        }
+
+        /* 按鈕區 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 40px;
+            /* 美化按鈕邊界：改為完全圓角的膠囊形狀 */
+            border-radius: 30px; 
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            min-width: 200px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .btn-primary {
+            background-color: rgba(23, 26, 32, 0.95);
+            color: white;
+            border: 1px solid rgba(23, 26, 32, 0.95);
+        }
+        .btn-secondary {
+            background-color: rgba(240, 240, 240, 0.8);
+            color: #393c41;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 個別區塊背景 */
+        #hero { background-color: #f8fafc; }
+        #academic { background-color: #ffffff; }
+        #lifestyle { background-color: #f4f4f4; }
+        #skills { background-color: #ffffff; }
+
+        /* 網格系統 (文字卡片) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            padding: 24px;
+            background: white;
+            /* 美化文字卡片邊界：加粗頂部裝飾線、增添精緻細邊框與浮動效果 */
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-top: 4px solid #393c41;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+        }
+        .grid-item h3 { font-size: 17px; margin-bottom: 10px; color: #171a20; }
+        .grid-item p { font-size: 14.5px; color: #5c5e62; line-height: 1.7; }
+        #lifestyle .grid-item { border-top-color: #EF0107; } /* 兵工廠紅 */
+
+        /* 隱藏捲軸 */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* RWD 手機版適應 */
+        @media (max-width: 768px) {
+            .photo-collage {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+                gap: 12px;
+            }
+            .pic-personal { grid-column: 1 / 3; grid-row: 1 / 2; height: 250px; }
+            .pic-football { grid-column: 1 / 2; grid-row: 2 / 3; height: 150px; }
+            .pic-swim     { grid-column: 2 / 3; grid-row: 2 / 3; height: 150px; }
+            .pic-friends  { grid-column: 1 / 2; grid-row: 3 / 4; height: 150px; }
+            .pic-brother  { grid-column: 2 / 3; grid-row: 3 / 4; height: 150px; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 導覽列 -->
+<nav>
+    <a href="#hero">首頁</a>
+    <a href="#academic">醫學與學術</a>
+    <a href="#lifestyle">運動與生活</a>
+    <a href="#skills">技術堆疊</a>
+</nav>
+
+<!-- 區塊 1：首頁與照片拼貼 -->
+<section id="hero">
+    <div class="section-header">
+        <h1>林宇哲</h1>
+        <p class="subtitle">醫學科學 × 心理分析 × 程式開發</p>
+    </div>
+
+    <!-- 照片拼貼牆 -->
+    <div class="photo-collage">
+        <div class="photo-item pic-personal">
+            <img src="宇哲圖片1.jfif" alt="個人照">
+        </div>
+        <div class="photo-item pic-football">
+            <img src="宇哲圖片2.jfif" alt="足球">
+        </div>
+        <div class="photo-item pic-swim">
+            <img src="宇哲圖片3.jfif" alt="游泳">
+        </div>
+        <div class="photo-item pic-friends">
+            <img src="宇哲圖片4.jfif" alt="朋友">
+        </div>
+        <div class="photo-item pic-brother">
+            <img src="宇哲圖片5.jfif" alt="哥哥">
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="#academic" class="btn btn-primary">學術探索</a>
+        <a href="#lifestyle" class="btn btn-secondary">個人生活</a>
+    </div>
+</section>
+
+<!-- 區塊 2：醫學與學術 -->
+<section id="academic">
+    <div class="section-header">
+        <h1>學術與醫學探索</h1>
+        <p class="subtitle">跨領域思維</p>
+    </div>
+
+    <div class="section-body">
+        <div class="grid-container">
+            <div class="grid-item">
+                <h3>基礎醫學與公衛</h3>
+                <p>涵蓋分子生物學、生物化學、寄生蟲學。曾參與系學會公衛部展覽，致力於公衛知識普及化。</p>
+            </div>
+            <div class="grid-item">
+                <h3>神經科學與醫學倫理</h3>
+                <p>剖析電影《記憶裂痕》，探討光遺傳學技術、記憶消除在 PTSD 治療的倫理爭議與醫病溝通中的家父長主義。</p>
+            </div>
+            <div class="grid-item">
+                <h3>榮格心理學</h3>
+                <p>運用分析心理學框架記錄解析夢境，探討集體潛意識對個人抗壓性與生涯決策的影響。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="#lifestyle" class="btn btn-primary">繼續向下</a>
+    </div>
+</section>
+
+<!-- 區塊 3：運動與生活 -->
+<section id="lifestyle">
+    <div class="section-header">
+        <h1>熱血與競技</h1>
+        <p class="subtitle" style="color: #EF0107;">Gooner & Swimmer</p>
+    </div>
+
+    <div class="section-body">
+        <div class="grid-container" style="grid-template-columns: 1fr 1fr;">
+            <div class="grid-item">
+                <h3>英超兵工廠 (Arsenal)</h3>
+                <p>熱愛流暢的傳控哲學。平時會換上日本隊球衣與 adidas 碎釘足球鞋，在球場享受奔跑的純粹快樂。</p>
+            </div>
+            <div class="grid-item">
+                <h3>系泳隊與視覺企劃</h3>
+                <p>活躍於系泳隊，主導招生宣傳影片企劃。結合網路迷因文化（如《咒術迴戰》與《雨愛》），展現文字創意與團隊幽默感。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="#skills" class="btn btn-secondary">技術與專案</a>
+    </div>
+</section>
+
+<!-- 區塊 4：技能與專案 -->
+<section id="skills">
+    <div class="section-header">
+        <h1>專業技能與工具</h1>
+        <p class="subtitle">Technology Stack</p>
+    </div>
+
+    <div class="section-body">
+        <p style="margin-bottom: 30px;">從零開始使用 HTML/CSS 進行前端排版，透過 VS Code 開發並使用 Git 版本控制，最終部署至 GitHub Pages 建立個人靜態網站。</p>
+        
+        <div class="grid-container" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="grid-item"><h3>網頁前端</h3><p>HTML / CSS</p></div>
+            <div class="grid-item"><h3>程式與數據</h3><p>Python (NumPy)<br>生物統計</p></div>
+            <div class="grid-item"><h3>開發工具</h3><p>Git / GitHub<br>VS Code</p></div>
+            <div class="grid-item"><h3>學術排版</h3><p>LaTeX<br>Word (B4格式)</p></div>
+        </div>
+        
+        <p style="margin-top: 40px; font-size: 12px; color: #a2a2a2;">&copy; 2026 林宇哲. All rights reserved.</p>
+    </div>
+
+    <div class="button-group">
+        <a href="#hero" class="btn btn-primary">回到頂部</a>
+    </div>
+</section>
+
+</body>
+</html>
